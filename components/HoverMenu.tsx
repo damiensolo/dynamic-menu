@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { motion } from 'framer-motion';
 
@@ -93,16 +92,16 @@ const HoverMenu: React.FC<HoverMenuProps> = ({ navigationData, menuLayout, onSel
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
             transition={{ duration: 0.2, ease: 'easeOut' }}
-            className="absolute top-full left-0 mt-4 bg-white rounded-xl shadow-2xl p-6 md:p-8 z-50 origin-top-left"
+            className="absolute top-full left-0 mt-4 bg-white rounded-xl shadow-2xl p-8 z-50 origin-top-left"
         >
-            <div className="grid grid-cols-1 md:grid-cols-3 text-black divide-y md:divide-y-0 md:divide-x divide-gray-100 w-max min-w-[800px]">
-                <div className="space-y-8 pb-6 md:pb-0 md:pr-8">
+            <div className="grid grid-cols-3 gap-x-8 text-black" style={{minWidth: '850px'}}>
+                <div className="space-y-8 border-r border-gray-100 pr-8">
                     {renderColumn(menuLayout.column1, navigationData, onSelect)}
                 </div>
-                <div className="space-y-8 py-6 md:py-0 md:px-8">
+                <div className="space-y-8 border-r border-gray-100 pr-8">
                     {renderColumn(menuLayout.column2, navigationData, onSelect)}
                 </div>
-                <div className="space-y-8 pt-6 md:pt-0 md:pl-8">
+                <div className="space-y-8">
                     {renderColumn(menuLayout.column3, navigationData, onSelect)}
                 </div>
             </div>
