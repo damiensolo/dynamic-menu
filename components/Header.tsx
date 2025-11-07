@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import HoverMenu from './HoverMenu';
 
@@ -195,6 +195,45 @@ const menuLayout = {
     column3: ['documentation', 'more'],
 };
 
+// --- Project Data ---
+const projects = [
+  {
+    id: 'big-mall',
+    name: 'Big Mall',
+    details: [
+      "4900 Moorpark Ave #326, San Jose, CA 95127, USA",
+      "Owner - Build Enterprises",
+      "GC - A to Z construction",
+      "PM - Max Anderson",
+      "+1 56535 - 7878"
+    ]
+  },
+  {
+    id: 'downtown-tower',
+    name: 'Downtown Tower',
+    details: [
+      "123 Main St, San Francisco, CA 94105, USA",
+      "Owner - Skyline Corp",
+      "GC - Apex Builders",
+      "PM - Jane Doe",
+      "+1 415-555-1234"
+    ]
+  },
+  {
+    id: 'suburban-complex',
+    name: 'Suburban Complex',
+    details: [
+      "789 Oak Rd, Palo Alto, CA 94301, USA",
+      "Owner - Greenfield Dev",
+      "GC - Summit Construction",
+      "PM - John Smith",
+      "+1 650-555-5678"
+    ]
+  }
+];
+
+type Project = typeof projects[0];
+
 
 interface NavItemProps {
     icon: React.ReactNode;
@@ -211,14 +250,95 @@ const NavItem: React.FC<NavItemProps> = ({ icon, label, isActive = false, active
     </a>
 );
 
-const projectDetails = [
-    "Big Mall",
-    "4900 Moorpark Ave #326, San Jose, CA 95127, USA",
-    "Owner - Build Enterprises",
-    "GC - A to Z construction",
-    "PM - Max Anderson",
-    "+1 56535 - 7878"
-];
+// --- New ProjectSelector Component ---
+
+const ChevronDownIcon = (props: React.ComponentProps<'svg'>) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <path d="m6 9 6 6 6-6"/>
+    </svg>
+);
+
+const CheckIcon = (props: React.ComponentProps<'svg'>) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <path d="M20 6 9 17l-5-5"/>
+    </svg>
+);
+
+
+interface ProjectSelectorProps {
+    projects: Project[];
+    selectedProject: Project;
+    onSelectProject: (project: Project) => void;
+}
+
+const ProjectSelector: React.FC<ProjectSelectorProps> = ({ projects, selectedProject, onSelectProject }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const selectorRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (selectorRef.current && !selectorRef.current.contains(event.target as Node)) {
+                setIsOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [selectorRef]);
+
+    return (
+        <div className="relative" ref={selectorRef}>
+            <button 
+                onClick={() => setIsOpen(!isOpen)}
+                className="flex items-center gap-2 px-3 py-1.5 text-sm bg-transparent hover:bg-gray-700/50 rounded-md transition-colors border border-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-cyan-500"
+                aria-haspopup="listbox"
+                aria-expanded={isOpen}
+            >
+                <span className="font-semibold text-white">{selectedProject.name}</span>
+                <motion.div
+                    animate={{ rotate: isOpen ? 180 : 0 }}
+                    transition={{ duration: 0.2 }}
+                >
+                    <ChevronDownIcon className="w-4 h-4 text-gray-400" />
+                </motion.div>
+            </button>
+            <AnimatePresence>
+                {isOpen && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -5 }}
+                        animate={{ opacity: 1, y: 5 }}
+                        exit={{ opacity: 0, y: -5 }}
+                        transition={{ duration: 0.15, ease: "easeOut" }}
+                        className="absolute z-10 w-max min-w-full mt-1 bg-[#2a2a2a] border border-gray-600 rounded-md shadow-lg"
+                    >
+                        <ul className="p-1" role="listbox">
+                            {projects.map(project => (
+                                <li 
+                                    key={project.id}
+                                    className="text-sm text-gray-200 rounded-sm hover:bg-cyan-600 hover:text-white cursor-pointer"
+                                    onClick={() => {
+                                        onSelectProject(project);
+                                        setIsOpen(false);
+                                    }}
+                                    role="option"
+                                    aria-selected={project.id === selectedProject.id}
+                                >
+                                    <div className="flex items-center justify-between px-2 py-1.5">
+                                        <span>{project.name}</span>
+                                        {project.id === selectedProject.id && <CheckIcon className="w-4 h-4"/>}
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </div>
+    );
+};
+
 
 type StandardCategoryKey = Exclude<keyof typeof navigationData, 'more'>;
 
@@ -239,6 +359,7 @@ const Header: React.FC<HeaderProps> = ({ onSelectionChange }) => {
     const [isMenuVisible, setMenuVisible] = useState(false);
     const [activeCategoryKey, setActiveCategoryKey] = useState<StandardCategoryKey>('documentation');
     const [activeSubcategoryKey, setActiveSubcategoryKey] = useState<string>('document');
+    const [selectedProject, setSelectedProject] = useState<Project>(projects[0]);
 
     const categoryColors: { [key: string]: string } = {
         projectManagement: 'text-orange-500',
@@ -265,6 +386,10 @@ const Header: React.FC<HeaderProps> = ({ onSelectionChange }) => {
             }
         }
         setMenuVisible(false);
+    };
+
+    const handleProjectSelect = (project: Project) => {
+        setSelectedProject(project);
     };
 
     const activeCategory = navigationData[activeCategoryKey];
@@ -341,15 +466,22 @@ const Header: React.FC<HeaderProps> = ({ onSelectionChange }) => {
 
                 {/* Bottom Row for Project Details */}
                 <div className="text-xs text-gray-400 flex items-center gap-x-3">
-                    <div className="w-20 shrink-0 text-center pr-6">
+                    <div className="w-14 shrink-0 text-center">
                         <span className="font-semibold text-white">
                             {categoryAbbreviations[activeCategoryKey]}
                         </span>
                     </div>
-                    {projectDetails.map((detail, index) => (
+                    
+                    <ProjectSelector
+                        projects={projects}
+                        selectedProject={selectedProject}
+                        onSelectProject={handleProjectSelect}
+                    />
+
+                    {selectedProject.details.map((detail, index) => (
                         <React.Fragment key={index}>
+                            <span className="text-gray-500">|</span>
                             <span>{detail}</span>
-                            {index < projectDetails.length - 1 && <span className="text-gray-500">|</span>}
                         </React.Fragment>
                     ))}
                 </div>
