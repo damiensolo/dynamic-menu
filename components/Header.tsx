@@ -222,14 +222,23 @@ const projectDetails = [
 
 type StandardCategoryKey = Exclude<keyof typeof navigationData, 'more'>;
 
+const categoryAbbreviations: { [key in StandardCategoryKey]: string } = {
+    projectManagement: 'PM',
+    collaboration: 'Team',
+    quality: 'Quality',
+    finance: 'Finance',
+    fieldOps: 'Field',
+    documentation: 'Docs',
+};
+
 interface HeaderProps {
     onSelectionChange: (title: string) => void;
 }
 
 const Header: React.FC<HeaderProps> = ({ onSelectionChange }) => {
     const [isMenuVisible, setMenuVisible] = useState(false);
-    const [activeCategoryKey, setActiveCategoryKey] = useState<StandardCategoryKey>('projectManagement');
-    const [activeSubcategoryKey, setActiveSubcategoryKey] = useState<string>('project');
+    const [activeCategoryKey, setActiveCategoryKey] = useState<StandardCategoryKey>('documentation');
+    const [activeSubcategoryKey, setActiveSubcategoryKey] = useState<string>('document');
 
     const categoryColors: { [key: string]: string } = {
         projectManagement: 'text-orange-500',
@@ -279,7 +288,7 @@ const Header: React.FC<HeaderProps> = ({ onSelectionChange }) => {
                     {/* Left & Center Nav Items */}
                     <div className="flex items-center gap-x-6">
                         <div 
-                            className="relative"
+                            className="relative h-12"
                             onMouseEnter={() => setMenuVisible(true)}
                             onMouseLeave={() => setMenuVisible(false)}
                         >
@@ -331,7 +340,12 @@ const Header: React.FC<HeaderProps> = ({ onSelectionChange }) => {
                 </div>
 
                 {/* Bottom Row for Project Details */}
-                <div className="pl-20 text-xs text-gray-400 flex items-center gap-x-3">
+                <div className="text-xs text-gray-400 flex items-center gap-x-3">
+                    <div className="w-20 shrink-0 text-center pr-6">
+                        <span className="font-semibold text-white">
+                            {categoryAbbreviations[activeCategoryKey]}
+                        </span>
+                    </div>
                     {projectDetails.map((detail, index) => (
                         <React.Fragment key={index}>
                             <span>{detail}</span>

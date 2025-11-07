@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import Header from './components/Header';
 
 const App: React.FC = () => {
-  const [pageTitle, setPageTitle] = useState('Project Management / Project');
+  const [pageTitle, setPageTitle] = useState('Documentation / Document');
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
