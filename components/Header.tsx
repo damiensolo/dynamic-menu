@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import HoverMenu from './HoverMenu';
@@ -101,7 +102,33 @@ const DocumentationMainIcon = () => <MainIconWrapper className="bg-cyan-500"><pa
 
 // --- Navigation Data Structure ---
 
-const navigationData = {
+// Fix: Add explicit type definitions for navigation data to resolve TypeScript error.
+// These types match the props expected by HoverMenu.tsx.
+interface PrimaryMenuItemData {
+    key: string;
+    label: string;
+    description: string;
+    icon: React.ReactNode;
+    navIcon: React.ReactNode;
+}
+
+interface MoreItem {
+    key: 'more';
+    title: 'More';
+    items: string[];
+}
+
+interface StandardCategoryData {
+    key: string;
+    title: string;
+    mainIcon: React.ReactNode;
+    items: PrimaryMenuItemData[];
+}
+
+type CategoryData = StandardCategoryData | MoreItem;
+
+
+const navigationData: { [key: string]: CategoryData } = {
     projectManagement: {
         key: 'projectManagement', title: 'Project Management', mainIcon: <ProjectManagementMainIcon/>,
         items: [
@@ -157,8 +184,6 @@ const navigationData = {
         ]
     },
     more: {
-        // FIX: Added 'as const' to the key to ensure TypeScript infers it as a literal type 'more'.
-        // This is necessary for the discriminated union in HoverMenu to correctly identify this category's type.
         key: 'more' as const, title: 'More',
         items: ['Reports', 'Configure']
     }
@@ -174,12 +199,15 @@ const menuLayout = {
 interface NavItemProps {
     icon: React.ReactNode;
     label: string;
+    isActive?: boolean;
+    activeColor?: string;
+    onClick: (event: React.MouseEvent<HTMLAnchorElement>) => void;
 }
 
-const NavItem: React.FC<NavItemProps> = ({ icon, label }) => (
-    <a href="#" className="flex flex-col items-center gap-2 text-gray-300 hover:text-white transition-colors duration-200">
+const NavItem: React.FC<NavItemProps> = ({ icon, label, isActive = false, activeColor = 'text-white', onClick }) => (
+    <a href="#" onClick={onClick} className={`flex flex-col items-center gap-2 transition-colors duration-200 ${isActive ? activeColor : 'text-gray-300 hover:text-white'}`}>
         {icon}
-        <span className="text-xs font-medium">{label}</span>
+        <span className={`text-xs ${isActive ? 'font-semibold' : 'font-medium'}`}>{label}</span>
     </a>
 );
 
@@ -192,19 +220,56 @@ const projectDetails = [
     "+1 56535 - 7878"
 ];
 
-const Header: React.FC = () => {
-    const [isMenuVisible, setMenuVisible] = useState(false);
-    const [activeCategoryKey, setActiveCategoryKey] = useState('projectManagement');
+type StandardCategoryKey = Exclude<keyof typeof navigationData, 'more'>;
 
-    const handleSelectCategory = (key: string) => {
-        if (key !== 'more') {
-            setActiveCategoryKey(key);
+interface HeaderProps {
+    onSelectionChange: (title: string) => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ onSelectionChange }) => {
+    const [isMenuVisible, setMenuVisible] = useState(false);
+    const [activeCategoryKey, setActiveCategoryKey] = useState<StandardCategoryKey>('projectManagement');
+    const [activeSubcategoryKey, setActiveSubcategoryKey] = useState<string>('project');
+
+    const categoryColors: { [key: string]: string } = {
+        projectManagement: 'text-orange-500',
+        collaboration: 'text-sky-500',
+        quality: 'text-rose-500',
+        finance: 'text-green-500',
+        fieldOps: 'text-amber-500',
+        documentation: 'text-cyan-500',
+    };
+
+    // FIX: Add type guard to safely access properties on `category`.
+    // This ensures `category` is a `StandardCategoryData` before we try to find an item in its `items` array.
+    const handleSelect = (categoryKey: string, subcategoryKey: string) => {
+        if (categoryKey !== 'more') {
+            const category = navigationData[categoryKey];
+            if ('mainIcon' in category) { // Type guard
+                const subcategory = category.items.find(item => item.key === subcategoryKey);
+
+                if (subcategory) {
+                    setActiveCategoryKey(categoryKey as StandardCategoryKey);
+                    setActiveSubcategoryKey(subcategoryKey);
+                    onSelectionChange(`${category.title} / ${subcategory.label}`);
+                }
+            }
         }
         setMenuVisible(false);
     };
 
     const activeCategory = navigationData[activeCategoryKey];
+
+    // FIX: Add a type guard to ensure activeCategory is of type StandardCategoryData.
+    // This resolves errors related to accessing properties like `mainIcon` and iterating over `items`
+    // which are not guaranteed to exist on the general `CategoryData` type.
+    if (!('mainIcon' in activeCategory)) {
+        // This path should be unreachable given the state logic, but it's needed for type safety.
+        return null;
+    }
+
     const navItems = activeCategory.items;
+    const activeColor = categoryColors[activeCategoryKey] || 'text-white';
 
     return (
         <header className="bg-[#1e1e1e] text-white font-sans shadow-lg">
@@ -219,12 +284,13 @@ const Header: React.FC = () => {
                             onMouseLeave={() => setMenuVisible(false)}
                         >
                             {activeCategory.mainIcon}
+                            <div className="absolute top-full h-4 w-full" />
                             <AnimatePresence>
                                 {isMenuVisible && 
                                     <HoverMenu 
                                         navigationData={navigationData}
                                         menuLayout={menuLayout}
-                                        onSelectCategory={handleSelectCategory}
+                                        onSelect={handleSelect}
                                     />
                                 }
                             </AnimatePresence>
@@ -233,7 +299,17 @@ const Header: React.FC = () => {
                             <ul className="flex items-center gap-x-6">
                                 {navItems.map((item) => (
                                     <li key={item.key}>
-                                        <NavItem icon={item.navIcon} label={item.label} />
+                                        <NavItem 
+                                            icon={item.navIcon} 
+                                            label={item.label}
+                                            isActive={item.key === activeSubcategoryKey}
+                                            activeColor={activeColor}
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                setActiveSubcategoryKey(item.key);
+                                                onSelectionChange(`${activeCategory.title} / ${item.label}`);
+                                            }}
+                                        />
                                     </li>
                                 ))}
                             </ul>

@@ -28,14 +28,14 @@ type CategoryData = StandardCategoryData | MoreItem;
 interface HoverMenuProps {
     navigationData: { [key: string]: CategoryData };
     menuLayout: { [key: string]: string[] };
-    onSelectCategory: (key: string) => void;
+    onSelect: (categoryKey: string, subcategoryKey: string) => void;
 }
 
 interface PrimaryMenuItemProps {
     icon: React.ReactNode;
     label: string;
     description: string;
-    onClick: () => void;
+    onClick: (event: React.MouseEvent<HTMLAnchorElement>) => void;
 }
 
 // --- Component for Primary Menu Items ---
@@ -56,7 +56,7 @@ const MoreMenuItem: React.FC<{ label: string }> = ({ label }) => (
 
 
 // --- Helper to render a column ---
-const renderColumn = (columnKeys: string[], navigationData: HoverMenuProps['navigationData'], onSelectCategory: HoverMenuProps['onSelectCategory']) => {
+const renderColumn = (columnKeys: string[], navigationData: HoverMenuProps['navigationData'], onSelect: HoverMenuProps['onSelect']) => {
   return columnKeys.map(key => {
     const category = navigationData[key];
     if (!category) return null;
@@ -72,7 +72,10 @@ const renderColumn = (columnKeys: string[], navigationData: HoverMenuProps['navi
                         icon={item.icon} 
                         label={item.label} 
                         description={item.description}
-                        onClick={() => onSelectCategory(category.key)}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            onSelect(category.key, item.key);
+                        }}
                     />
                   ))
             }
@@ -83,7 +86,7 @@ const renderColumn = (columnKeys: string[], navigationData: HoverMenuProps['navi
 
 
 // --- Main Component Definition ---
-const HoverMenu: React.FC<HoverMenuProps> = ({ navigationData, menuLayout, onSelectCategory }) => {
+const HoverMenu: React.FC<HoverMenuProps> = ({ navigationData, menuLayout, onSelect }) => {
     return (
         <motion.div
             initial={{ opacity: 0, y: 10, scale: 0.95 }}
@@ -94,13 +97,13 @@ const HoverMenu: React.FC<HoverMenuProps> = ({ navigationData, menuLayout, onSel
         >
             <div className="grid grid-cols-1 md:grid-cols-3 text-black divide-y md:divide-y-0 md:divide-x divide-gray-100 w-max min-w-[800px]">
                 <div className="space-y-8 pb-6 md:pb-0 md:pr-8">
-                    {renderColumn(menuLayout.column1, navigationData, onSelectCategory)}
+                    {renderColumn(menuLayout.column1, navigationData, onSelect)}
                 </div>
                 <div className="space-y-8 py-6 md:py-0 md:px-8">
-                    {renderColumn(menuLayout.column2, navigationData, onSelectCategory)}
+                    {renderColumn(menuLayout.column2, navigationData, onSelect)}
                 </div>
                 <div className="space-y-8 pt-6 md:pt-0 md:pl-8">
-                    {renderColumn(menuLayout.column3, navigationData, onSelectCategory)}
+                    {renderColumn(menuLayout.column3, navigationData, onSelect)}
                 </div>
             </div>
         </motion.div>
