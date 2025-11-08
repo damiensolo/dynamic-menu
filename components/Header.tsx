@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import HoverMenu from './HoverMenu';
@@ -34,7 +33,7 @@ const MenuIconWrapper: React.FC<{ children: React.ReactNode; className?: string 
 
 // Base wrapper for large main category icons
 const MainIconWrapper: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className }) => (
-    <div className="relative w-14 h-14 flex items-center justify-center cursor-pointer">
+    <div className="relative w-14 h-12 flex items-center justify-center cursor-pointer">
         <div className={`absolute w-12 h-12 rounded-md transform -rotate-6 shadow-lg ${className} opacity-80`}></div>
         <div className={`absolute w-12 h-12 rounded-md transform rotate-6 shadow-lg ${className} opacity-90`}></div>
         <div className={`absolute w-12 h-12 rounded-md flex items-center justify-center shadow-2xl ${className}`}>
@@ -407,13 +406,13 @@ const Header: React.FC<HeaderProps> = ({ onSelectionChange }) => {
 
     return (
         <header className="bg-[#1e1e1e] text-white font-sans shadow-lg">
-            <div className="px-4 pt-3 pb-2 flex flex-col gap-y-3">
+            <div className="px-2 pt-3 pb-2 flex flex-col gap-y-2">
                 {/* Top Row for main navigation and actions */}
                 <div className="flex justify-between items-center">
                     {/* Left & Center Nav Items */}
-                    <div className="flex items-center gap-x-6">
+                    <div className="flex items-center gap-x-3">
                         <div 
-                            className="relative h-12"
+                            className="relative h-12 w-[84px] flex justify-center items-center"
                             onMouseEnter={() => setMenuVisible(true)}
                             onMouseLeave={() => setMenuVisible(false)}
                         >
@@ -430,7 +429,7 @@ const Header: React.FC<HeaderProps> = ({ onSelectionChange }) => {
                             </AnimatePresence>
                         </div>
                         <nav>
-                            <ul className="flex items-center gap-x-10">
+                            <ul className="flex items-center gap-x-12">
                                 {navItems.map((item) => (
                                     <li key={item.key}>
                                         <NavItem 
@@ -451,7 +450,7 @@ const Header: React.FC<HeaderProps> = ({ onSelectionChange }) => {
                     </div>
 
                     {/* Right Action Icons */}
-                    <div className="flex items-center gap-x-4">
+                    <div className="flex items-center gap-x-8">
                         <button className="text-gray-300 hover:text-white transition-colors duration-200" aria-label="Search"><SearchIcon /></button>
                         <button className="text-gray-300 hover:text-white transition-colors duration-200" aria-label="Chat"><ChatIcon /></button>
                         <button className="text-gray-300 hover:text-white transition-colors duration-200" aria-label="Help"><HelpIcon /></button>
@@ -465,8 +464,8 @@ const Header: React.FC<HeaderProps> = ({ onSelectionChange }) => {
                 </div>
 
                 {/* Bottom Row for Project Details */}
-                <div className="text-xs text-gray-400 flex items-center gap-x-3">
-                    <div className="w-14 shrink-0 text-center">
+                <div className="text-xs text-gray-400 flex items-center">
+                    <div className="w-[84px] shrink-0 text-center">
                         <span className="font-semibold text-white">
                             {categoryAbbreviations[activeCategoryKey]}
                         </span>
@@ -480,8 +479,8 @@ const Header: React.FC<HeaderProps> = ({ onSelectionChange }) => {
 
                     {selectedProject.details.map((detail, index) => (
                         <React.Fragment key={index}>
-                            <span className="text-gray-500">|</span>
-                            <span>{detail}</span>
+                            <span className="text-gray-500 px-3">|</span>
+                            <span className="whitespace-nowrap">{detail}</span>
                         </React.Fragment>
                     ))}
                 </div>
