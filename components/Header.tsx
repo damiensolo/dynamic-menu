@@ -288,7 +288,7 @@ const ProjectSelector: React.FC<ProjectSelectorProps> = ({ projects, selectedPro
     }, [selectorRef]);
 
     return (
-        <div className="relative" ref={selectorRef}>
+        <div className="relative pl-2" ref={selectorRef}>
             <button 
                 onClick={() => setIsOpen(!isOpen)}
                 className="flex items-center gap-2 px-3 py-1.5 text-sm bg-transparent hover:bg-gray-700/50 rounded-md transition-colors border border-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-cyan-500"
@@ -410,9 +410,9 @@ const Header: React.FC<HeaderProps> = ({ onSelectionChange }) => {
                 {/* Top Row for main navigation and actions */}
                 <div className="flex justify-between items-center">
                     {/* Left & Center Nav Items */}
-                    <div className="flex items-center gap-x-3">
+                    <div className="flex items-center gap-x-4">
                         <div 
-                            className="relative h-12 w-[84px] flex justify-center items-center"
+                            className="relative h-12 w-[76px] flex justify-center items-center"
                             onMouseEnter={() => setMenuVisible(true)}
                             onMouseLeave={() => setMenuVisible(false)}
                         >
@@ -465,7 +465,7 @@ const Header: React.FC<HeaderProps> = ({ onSelectionChange }) => {
 
                 {/* Bottom Row for Project Details */}
                 <div className="text-xs text-gray-400 flex items-center">
-                    <div className="w-[84px] shrink-0 text-center">
+                    <div className="w-[76px] shrink-0 text-center">
                         <span className="font-semibold text-white">
                             {categoryAbbreviations[activeCategoryKey]}
                         </span>
@@ -479,7 +479,7 @@ const Header: React.FC<HeaderProps> = ({ onSelectionChange }) => {
 
                     {selectedProject.details.map((detail, index) => (
                         <React.Fragment key={index}>
-                            <span className="text-gray-500 px-3">|</span>
+                            <span className="text-gray-500 px-4">|</span>
                             <span className="whitespace-nowrap">{detail}</span>
                         </React.Fragment>
                     ))}
