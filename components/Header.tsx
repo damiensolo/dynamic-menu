@@ -407,7 +407,7 @@ const Header: React.FC<HeaderProps> = ({ onSelectionChange }) => {
 
     return (
         <header className="bg-[#1e1e1e] text-white font-sans shadow-lg">
-            <div className="px-4 py-3 flex flex-col gap-y-3">
+            <div className="px-4 pt-3 pb-2 flex flex-col gap-y-3">
                 {/* Top Row for main navigation and actions */}
                 <div className="flex justify-between items-center">
                     {/* Left & Center Nav Items */}
@@ -430,7 +430,7 @@ const Header: React.FC<HeaderProps> = ({ onSelectionChange }) => {
                             </AnimatePresence>
                         </div>
                         <nav>
-                            <ul className="flex items-center gap-x-6">
+                            <ul className="flex items-center gap-x-10">
                                 {navItems.map((item) => (
                                     <li key={item.key}>
                                         <NavItem 
