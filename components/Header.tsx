@@ -406,7 +406,7 @@ const Header: React.FC<HeaderProps> = ({ onSelectionChange }) => {
 
     return (
         <header className="bg-[#1e1e1e] text-white font-sans shadow-lg">
-            <div className="px-2 pt-3 pb-2 flex flex-col gap-y-2">
+            <div className="pl-2 pr-4 pt-3 pb-2 flex flex-col gap-y-2">
                 {/* Top Row for main navigation and actions */}
                 <div className="flex justify-between items-center">
                     {/* Left & Center Nav Items */}
@@ -450,7 +450,7 @@ const Header: React.FC<HeaderProps> = ({ onSelectionChange }) => {
                     </div>
 
                     {/* Right Action Icons */}
-                    <div className="flex items-center gap-x-8">
+                    <div className="flex items-center gap-x-8 pr-2">
                         <button className="text-gray-300 hover:text-white transition-colors duration-200" aria-label="Search"><SearchIcon /></button>
                         <button className="text-gray-300 hover:text-white transition-colors duration-200" aria-label="Chat"><ChatIcon /></button>
                         <button className="text-gray-300 hover:text-white transition-colors duration-200" aria-label="Help"><HelpIcon /></button>
