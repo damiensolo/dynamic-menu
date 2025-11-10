@@ -412,7 +412,7 @@ const Header: React.FC<HeaderProps> = ({ onSelectionChange }) => {
                     {/* Left & Center Nav Items */}
                     <div className="flex items-center gap-x-4">
                         <div 
-                            className="relative h-12 w-[74px] pr-1 flex justify-center items-center"
+                            className="relative h-12 w-[64px] pr-1 flex justify-center items-center"
                             onMouseEnter={() => setMenuVisible(true)}
                             onMouseLeave={() => setMenuVisible(false)}
                         >
@@ -465,7 +465,7 @@ const Header: React.FC<HeaderProps> = ({ onSelectionChange }) => {
 
                 {/* Bottom Row for Project Details */}
                 <div className="text-xs text-gray-400 flex items-center">
-                    <div className="w-[70px] shrink-0 text-center">
+                    <div className="w-[60px] shrink-0 text-center">
                         <span className="font-semibold text-white">
                             {categoryAbbreviations[activeCategoryKey]}
                         </span>
