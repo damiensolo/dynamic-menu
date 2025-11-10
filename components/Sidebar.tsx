@@ -72,7 +72,7 @@ const Sidebar: React.FC = () => {
     const [activeItemKey, setActiveItemKey] = useState('dashboard');
 
     return (
-        <aside className="w-24 bg-gray-50 border-r border-gray-200 flex flex-col shrink-0">
+        <aside className="w-[80] bg-gray-50 border-r border-gray-200 flex flex-col shrink-0">
             <div className="flex-grow">
                 {sidebarItems.map((item) => (
                     <SidebarItem

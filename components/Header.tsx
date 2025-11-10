@@ -291,7 +291,7 @@ const ProjectSelector: React.FC<ProjectSelectorProps> = ({ projects, selectedPro
         <div className="relative pl-2" ref={selectorRef}>
             <button 
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex items-center gap-2 px-3 py-1.5 text-sm bg-transparent hover:bg-gray-700/50 rounded-md transition-colors border border-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-cyan-500"
+                className="flex items-center gap-2 px-3 py-1 text-sm bg-transparent hover:bg-gray-700/50 rounded-md transition-colors border border-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-cyan-500"
                 aria-haspopup="listbox"
                 aria-expanded={isOpen}
             >
@@ -412,7 +412,7 @@ const Header: React.FC<HeaderProps> = ({ onSelectionChange }) => {
                     {/* Left & Center Nav Items */}
                     <div className="flex items-center gap-x-4">
                         <div 
-                            className="relative h-12 w-[76px] flex justify-center items-center"
+                            className="relative h-12 w-[74px] pr-1 flex justify-center items-center"
                             onMouseEnter={() => setMenuVisible(true)}
                             onMouseLeave={() => setMenuVisible(false)}
                         >
@@ -465,7 +465,7 @@ const Header: React.FC<HeaderProps> = ({ onSelectionChange }) => {
 
                 {/* Bottom Row for Project Details */}
                 <div className="text-xs text-gray-400 flex items-center">
-                    <div className="w-[76px] shrink-0 text-center">
+                    <div className="w-[70px] shrink-0 text-center">
                         <span className="font-semibold text-white">
                             {categoryAbbreviations[activeCategoryKey]}
                         </span>
