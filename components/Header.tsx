@@ -245,7 +245,7 @@ interface NavItemProps {
 const NavItem: React.FC<NavItemProps> = ({ icon, label, isActive = false, activeColor = 'text-white', onClick }) => (
     <a href="#" onClick={onClick} className={`flex flex-col items-center gap-2 transition-colors duration-200 ${isActive ? activeColor : 'text-gray-300 hover:text-white'}`}>
         {icon}
-        <span className={`text-xs ${isActive ? 'font-semibold' : 'font-medium'}`}>{label}</span>
+        <span className={`text-sm ${isActive ? 'font-semibold' : 'font-medium'}`}>{label}</span>
     </a>
 );
 
@@ -412,7 +412,7 @@ const Header: React.FC<HeaderProps> = ({ onSelectionChange }) => {
                     {/* Left & Center Nav Items */}
                     <div className="flex items-center gap-x-4">
                         <div 
-                            className="relative h-12 w-[64px] pr-1 flex justify-center items-center"
+                            className="relative h-12 w-[72px] pr-1 flex justify-center items-center"
                             onMouseEnter={() => setMenuVisible(true)}
                             onMouseLeave={() => setMenuVisible(false)}
                         >
@@ -464,8 +464,8 @@ const Header: React.FC<HeaderProps> = ({ onSelectionChange }) => {
                 </div>
 
                 {/* Bottom Row for Project Details */}
-                <div className="text-xs text-gray-400 flex items-center">
-                    <div className="w-[60px] shrink-0 text-center">
+                <div className="text-sm text-gray-400 flex items-center">
+                    <div className="w-[68px] shrink-0 text-center">
                         <span className="font-semibold text-white">
                             {categoryAbbreviations[activeCategoryKey]}
                         </span>
